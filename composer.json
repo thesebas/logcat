@@ -1,0 +1,26 @@
+{
+    "name": "thesebas/logcat",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "thesebas",
+            "email": "thesebas@thesebas.net"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "ulrichsg/getopt-php": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "thesebas\\logcat\\": "src/"
+        }
+    },
+    "bin": [
+        "bin/logcat"
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^5.2.10"
+    }
+}
