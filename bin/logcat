@@ -1,9 +1,6 @@
 #!/usr/bin/php
 <?php
 
-use GetOpt\GetOpt;
-use GetOpt\Option;
-
 foreach ([
              __DIR__ . '/../../../autoload.php',
              __DIR__ . '/../../autoload.php',
@@ -18,38 +15,59 @@ foreach ([
 
 require_once LOGCAT_COMPOSER_INSTALL;
 
-$getopt = new GetOpt([
-    Option::create('i', 'input', Getopt::REQUIRED_ARGUMENT)
-        ->setDefaultValue("php://stdin")
-        ->setDescription('in file'),
-    Option::create('o', 'output', Getopt::REQUIRED_ARGUMENT)
-        ->setDefaultValue("php://stdout")
-        ->setDescription('out file'),
-    Option::create('h', 'help', Getopt::NO_ARGUMENT)
-        ->setDescription('help'),
-]);
-
-function usage($msg = null, $exitcode = 0) {
+function usage($msg = null, $exitcode = 0, $helpText = "") {
     $err = fopen("php://stderr", 'w');
-    global $getopt;
     if (!is_null($msg)) {
         fprintf($err, "error: $msg\n");
     }
-
-    fprintf($err, $getopt->getHelpText());
-
+    fprintf($err, $helpText);
     exit($exitcode);
 }
 
-try {
-    $getopt->process();
-} catch (UnexpectedValueException $e) {
-    usage($e->getMessage(), 2);
-}
-if (@$getopt['help']) {
-    usage();
+if (class_exists('\\GetOpt\\GetOpt')) {
+    $getopt = new \GetOpt\GetOpt([
+        \GetOpt\Option::create('i', 'input', Getopt::REQUIRED_ARGUMENT)
+            ->setDefaultValue("php://stdin")
+            ->setDescription('in file'),
+        \GetOpt\Option::create('o', 'output', Getopt::REQUIRED_ARGUMENT)
+            ->setDefaultValue("php://stdout")
+            ->setDescription('out file'),
+        \GetOpt\Option::create('h', 'help', Getopt::NO_ARGUMENT)
+            ->setDescription('help'),
+    ]);
+
+
+    try {
+        $getopt->process();
+    } catch (UnexpectedValueException $e) {
+        usage($e->getMessage(), 2, $getopt->getHelpText());
+    }
+
+} elseif (class_exists('\\Ulrichsg\\Getopt\\Getopt')) {
+    $getopt = new \Ulrichsg\Getopt\Getopt([
+        (new  \Ulrichsg\Getopt\Option('i', 'input', \Ulrichsg\Getopt\Getopt::REQUIRED_ARGUMENT))
+            ->setDefaultValue("php://stdin")
+            ->setDescription('in file'),
+        (new \Ulrichsg\Getopt\Option('o', 'output', \Ulrichsg\Getopt\Getopt::REQUIRED_ARGUMENT))
+            ->setDefaultValue("php://stdout")
+            ->setDescription('out file'),
+        (new \Ulrichsg\Getopt\Option('h', 'help', \Ulrichsg\Getopt\Getopt::NO_ARGUMENT))
+            ->setDescription('help'),
+    ]);
+
+
+    try {
+        $getopt->parse();
+    } catch (UnexpectedValueException $e) {
+        usage($e->getMessage(), 2, $getopt->getHelpText());
+    }
+} else {
+    die;
 }
 
+if (@$getopt['help']) {
+    usage(null, 0, $getopt->getHelpText());
+}
 
 $logcat = new \thesebas\logcat\Logcat();
 
