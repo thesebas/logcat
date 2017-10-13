@@ -18,7 +18,7 @@ foreach ([
 
 require_once LOGCAT_COMPOSER_INSTALL;
 
-$getopt = new Getopt([
+$getopt = new GetOpt([
     Option::create('i', 'input', Getopt::REQUIRED_ARGUMENT)
         ->setDefaultValue("php://stdin")
         ->setDescription('in file'),
