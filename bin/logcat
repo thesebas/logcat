@@ -26,13 +26,13 @@ function usage($msg = null, $exitcode = 0, $helpText = "") {
 
 if (class_exists('\\GetOpt\\GetOpt')) {
     $getopt = new \GetOpt\GetOpt([
-        \GetOpt\Option::create('i', 'input', Getopt::REQUIRED_ARGUMENT)
+        \GetOpt\Option::create('i', 'input', \GetOpt\GetOpt::REQUIRED_ARGUMENT)
             ->setDefaultValue("php://stdin")
             ->setDescription('in file'),
-        \GetOpt\Option::create('o', 'output', Getopt::REQUIRED_ARGUMENT)
+        \GetOpt\Option::create('o', 'output', \GetOpt\GetOpt::REQUIRED_ARGUMENT)
             ->setDefaultValue("php://stdout")
             ->setDescription('out file'),
-        \GetOpt\Option::create('h', 'help', Getopt::NO_ARGUMENT)
+        \GetOpt\Option::create('h', 'help', \GetOpt\GetOpt::NO_ARGUMENT)
             ->setDescription('help'),
     ]);
 
